@@ -4,103 +4,146 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Music Bot — شغّل يوتيوب في ديسكورد</title>
-<meta name="description" content="بوت يشغّل يوتيوب في الروم الصوتي: بحث، طابور، تحكّم كامل. أضفه بنقرة واحدة.">
+<meta name="description" content="بوت يشغّل يوتيوب في الروم الصوتي: بحث، طابور، تحكّم كامل بالصوت. أضفه بنقرة واحدة.">
 <meta property="og:title" content="Music Bot — بوت يوتيوب لديسكورد">
-<meta property="og:description" content="شغّل أي أغنية من يوتيوب في الروم الصوتي. أضفه بنقرة واحدة.">
+<meta property="og:description" content="شغّل أي أغنية من يوتيوب في الروم الصوتي. طابور، تكرار، خلط، تحكّم بالصوت.">
+<meta property="og:image" content="/family.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+  *{margin:0;padding:0;box-sizing:border-box}
   :root{
     --red:#e8001c; --navy:#0a0e27; --gold:#d4a843;
-    --blurple:#5865F2; --card:#141a3a; --line:#26305e; --muted:#9aa6d4;
+    --blurple:#5865f2; --blurple-dark:#4452d4;
+    --card:#141a3a; --line:#26305e; --line-soft:#1c2550; --muted:#9aa6d4;
+    --shadow-md:0 14px 34px -12px rgba(0,0,0,.6);
+    --glow:0 16px 44px -8px rgba(88,101,242,.6);
   }
-  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
   body{
-    font-family:'Tajawal','Inter',sans-serif; color:#fff; min-height:100vh;
+    font-family:'Cairo','Inter',system-ui,sans-serif; color:#fff; min-height:100vh;
+    line-height:1.55; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    font-size:16px; overflow-x:hidden;
     background:
-      radial-gradient(1200px 600px at 80% -10%, rgba(232,0,28,.22), transparent 60%),
-      radial-gradient(900px 500px at 0% 10%, rgba(88,101,242,.20), transparent 55%),
+      radial-gradient(1200px 600px at 82% -12%, rgba(232,0,28,.22), transparent 60%),
+      radial-gradient(900px 520px at -5% 8%, rgba(88,101,242,.22), transparent 55%),
       var(--navy);
-    overflow-x:hidden;
   }
-  .wrap{max-width:1040px;margin:0 auto;padding:28px 20px 64px}
-  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px}
-  .logo .dot{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
-    background:linear-gradient(135deg,var(--red),var(--gold));font-size:22px;
-    box-shadow:0 4px 14px rgba(232,0,28,.35)}
-  .badge{font-size:13px;color:var(--muted);border:1px solid var(--line);
-    padding:6px 12px;border-radius:999px}
+  .wrap{max-width:1080px;margin:0 auto;padding:22px 20px 70px}
 
-  .hero{text-align:center;padding:56px 0 40px}
-  .hero .emoji{font-size:84px;animation:float 4s ease-in-out infinite;display:inline-block}
-  .hero h1{font-size:clamp(36px,6.4vw,64px);font-weight:900;line-height:1.12;
-    letter-spacing:-1px;margin-top:14px}
+  /* ───── NAV ───── */
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:900;font-size:19px;letter-spacing:-.3px;color:#fff;text-decoration:none}
+  .logo img{width:40px;height:40px;border-radius:11px;box-shadow:0 6px 18px rgba(232,0,28,.4)}
+  .badge{font-size:13px;color:var(--muted);border:1px solid var(--line);
+    padding:6px 13px;border-radius:999px;font-family:'Inter',sans-serif;font-weight:600}
+
+  /* ───── BUTTONS ───── */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-family:inherit;font-weight:800;font-size:16px;text-decoration:none;cursor:pointer;
+    padding:15px 30px;border-radius:15px;min-height:56px;border:none;color:#fff;
+    position:relative;overflow:hidden;
+    transition:transform .18s cubic-bezier(.2,.6,.2,1),box-shadow .25s,background .15s,border-color .15s}
+  .btn:active{transform:translateY(0) scale(.985)}
+  .btn svg{width:22px;height:22px;flex-shrink:0}
+  .btn-primary{background:var(--blurple);box-shadow:var(--shadow-md)}
+  .btn-primary:hover{background:var(--blurple-dark);transform:translateY(-3px);box-shadow:var(--glow)}
+  .btn-primary::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(120deg,transparent 0,rgba(255,255,255,.22) 50%,transparent 100%);
+    transform:translateX(-100%);transition:transform .55s ease}
+  .btn-primary:hover::after{transform:translateX(100%)}
+  .btn-ghost{background:rgba(255,255,255,.04);border:1.5px solid var(--line);font-weight:700}
+  .btn-ghost:hover{border-color:var(--gold);background:rgba(255,255,255,.07);transform:translateY(-3px);box-shadow:var(--shadow-md)}
+  .btn-pulse{animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:var(--shadow-md),0 0 0 0 rgba(88,101,242,.55)}
+    50%{box-shadow:var(--shadow-md),0 0 0 14px rgba(88,101,242,0)}}
+
+  /* ───── HERO ───── */
+  .hero{text-align:center;padding:54px 0 38px}
+  .hero-logo{width:104px;height:104px;border-radius:24px;margin:0 auto 22px;display:block;
+    box-shadow:0 18px 50px -12px rgba(232,0,28,.55);animation:float 4.5s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .pill{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;
+    background:rgba(212,168,67,.12);color:var(--gold);border:1px solid rgba(212,168,67,.4);
+    font-family:'Inter',sans-serif;font-weight:800;font-size:13px;margin-bottom:18px;letter-spacing:.3px}
+  .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:blink 1.6s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+  .hero h1{font-size:clamp(36px,6vw,68px);font-weight:900;line-height:1.08;letter-spacing:-1.2px;margin-bottom:14px}
   .hero h1 .grad{background:linear-gradient(120deg,var(--gold),var(--red));
     -webkit-background-clip:text;background-clip:text;color:transparent}
-  .hero p{color:var(--muted);font-size:clamp(16px,2.4vw,20px);
-    max-width:640px;margin:18px auto 0;line-height:1.7}
+  .hero p{color:var(--muted);font-size:clamp(16px,2vw,19px);font-weight:600;max-width:640px;margin:0 auto 6px;line-height:1.6}
+  .hero .en{color:#6f7bb0;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;max-width:620px;margin:0 auto}
+  .btnrow{display:flex;gap:13px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+  .sub{display:block;margin-top:18px;color:var(--muted);font-size:13.5px;font-family:'Inter',sans-serif}
 
-  .btnrow{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
-  .cta{display:inline-flex;align-items:center;justify-content:center;gap:12px;
-    background:var(--blurple);color:#fff;border:none;cursor:pointer;
-    font-family:inherit;font-weight:900;font-size:19px;
-    padding:18px 34px;border-radius:16px;text-decoration:none;min-height:60px;
-    box-shadow:0 14px 40px rgba(88,101,242,.45);
-    transition:transform .15s ease, box-shadow .15s ease}
-  .cta:hover{transform:translateY(-3px);box-shadow:0 20px 52px rgba(88,101,242,.6)}
-  .cta:active{transform:translateY(-1px)}
-  .cta svg{width:26px;height:26px}
-  .cta.ghost{background:rgba(255,255,255,.04);border:1px solid var(--line);
-    box-shadow:none;font-weight:800}
-  .cta.ghost:hover{border-color:var(--gold);background:rgba(255,255,255,.07)}
-  .sub{display:block;margin-top:16px;color:var(--muted);font-size:14px}
+  /* ───── SECTION HEAD ───── */
+  .head{text-align:center;margin:60px 0 30px}
+  .head h2{font-size:clamp(26px,4vw,40px);font-weight:900;letter-spacing:-.8px;margin-bottom:8px}
+  .head p{color:var(--muted);font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600}
 
-  .cmds{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-    gap:14px;margin-top:56px}
+  /* ───── COMMANDS ───── */
+  .cmds{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px}
   .cmd{background:linear-gradient(180deg,var(--card),#0e1430);
-    border:1px solid var(--line);border-radius:16px;padding:18px 20px;
-    display:flex;align-items:center;gap:14px;
-    transition:transform .15s ease,border-color .15s ease}
-  .cmd:hover{transform:translateY(-4px);border-color:var(--gold)}
-  .cmd .ic{font-size:22px;width:44px;height:44px;border-radius:12px;flex:0 0 44px;
-    display:grid;place-items:center;background:rgba(255,255,255,.05)}
-  .cmd code{font-family:'Inter',monospace;font-weight:900;color:var(--gold);font-size:16px}
+    border:1px solid var(--line);border-radius:15px;padding:16px 18px;
+    display:flex;align-items:center;gap:13px;
+    transition:transform .18s,border-color .18s,box-shadow .18s}
+  .cmd:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:var(--shadow-md)}
+  .cmd .ic{width:42px;height:42px;border-radius:11px;flex:0 0 42px;display:grid;place-items:center;
+    background:rgba(212,168,67,.14);color:var(--gold)}
+  .cmd .ic svg{width:21px;height:21px}
+  .cmd code{font-family:'Inter','SF Mono',monospace;font-weight:800;color:var(--gold);font-size:15px}
   .cmd span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 
-  .steps{margin-top:60px;background:rgba(255,255,255,.02);
+  /* ───── STEPS ───── */
+  .steps{margin-top:34px;background:rgba(255,255,255,.025);
     border:1px solid var(--line);border-radius:20px;padding:30px}
-  .steps h2{text-align:center;font-size:24px;margin-bottom:24px}
-  .step{display:flex;gap:16px;align-items:flex-start;padding:12px 0;
-    border-bottom:1px dashed var(--line)}
+  .step{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px dashed var(--line-soft)}
   .step:last-child{border-bottom:none}
-  .step .n{flex:0 0 36px;height:36px;border-radius:50%;font-weight:900;
+  .step .n{flex:0 0 38px;height:38px;border-radius:50%;font-weight:900;color:#fff;
     background:linear-gradient(135deg,var(--red),var(--gold));display:grid;place-items:center}
-  .step .t b{display:block;margin-bottom:3px}
-  .step .t span{color:var(--muted);font-size:14px}
+  .step .t b{display:block;margin-bottom:3px;font-size:16px}
+  .step .t span{color:var(--muted);font-size:13.5px}
+  .step .t code{font-family:'Inter',monospace;background:rgba(212,168,67,.15);color:var(--gold);
+    padding:2px 7px;border-radius:6px;font-weight:800}
 
-  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:50px;line-height:1.9}
+  /* ───── CTA ───── */
+  .cta-box{margin-top:60px;text-align:center;padding:48px 28px;border-radius:24px;
+    background:radial-gradient(circle at 20% 20%,rgba(255,255,255,.12) 0,transparent 50%),
+      linear-gradient(135deg,var(--blurple),var(--blurple-dark));
+    box-shadow:0 28px 60px -16px rgba(88,101,242,.5)}
+  .cta-box h2{font-size:clamp(26px,4.5vw,38px);font-weight:900;letter-spacing:-.8px;margin-bottom:10px}
+  .cta-box p{color:rgba(255,255,255,.9);font-weight:600;font-size:15px;margin-bottom:24px}
+  .cta-box .btn-primary{background:#fff;color:var(--blurple)}
+  .cta-box .btn-primary:hover{background:#f0f1ff}
+
+  /* ───── FOOTER ───── */
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:54px;line-height:1.9;font-family:'Inter',sans-serif}
   footer a{color:var(--gold);text-decoration:none}
   footer a:hover{text-decoration:underline}
-  .credit{display:inline-flex;align-items:center;gap:9px;margin-top:18px;
-    padding:10px 18px;border-radius:999px;font-weight:800;font-size:14px;color:#fff;
-    text-decoration:none;background:linear-gradient(135deg,rgba(29,155,240,.18),rgba(255,255,255,.04));
+  .footer-family{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+  .footer-family img{width:34px;height:34px;border-radius:9px;box-shadow:0 4px 12px rgba(0,0,0,.4);transition:transform .2s}
+  .footer-family img:hover{transform:translateY(-3px) scale(1.07)}
+  .credit{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+    padding:9px 18px;border-radius:999px;font-weight:800;font-size:13px;color:#fff;text-decoration:none;
+    background:linear-gradient(135deg,rgba(29,155,240,.18),rgba(255,255,255,.04));
     border:1px solid #1d9bf0;box-shadow:0 8px 24px rgba(29,155,240,.25);
-    transition:transform .15s ease, box-shadow .15s ease}
-  .credit:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(29,155,240,.4)}
-  .credit svg{width:18px;height:18px;fill:#1d9bf0}
+    transition:transform .15s,box-shadow .15s}
+  .credit:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(29,155,240,.4);text-decoration:none}
+  .credit svg{width:15px;height:15px;fill:#1d9bf0}
   .credit b{color:#1d9bf0}
 
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-  @media (prefers-reduced-motion:reduce){.hero .emoji{animation:none}}
+  @media (prefers-reduced-motion:reduce){.hero-logo,.pill .dot,.btn-pulse{animation:none}}
   @media (max-width:560px){
-    .wrap{padding:20px 16px 56px}
-    .hero{padding:36px 0 28px}
+    .wrap{padding:18px 16px 56px}
+    .hero{padding:34px 0 26px}
     .btnrow{flex-direction:column;align-items:stretch}
-    .cta{width:100%}
+    .btn{width:100%}
     .cmds{grid-template-columns:1fr}
-    .steps{padding:22px 18px}
+    .steps,.cta-box{padding:24px 18px}
     .badge{display:none}
   }
 </style>
@@ -108,52 +151,81 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="logo"><span class="dot">🎵</span> Music Bot</div>
-    <span class="badge">يوتيوب · YouTube in voice</span>
+    <a href="/" class="logo"><img src="/logo.png" alt="Music Bot logo"> Music Bot</a>
+    <span class="badge">YouTube in voice · يوتيوب صوتي</span>
   </header>
 
+  <!-- ─── HERO ─── -->
   <section class="hero">
-    <span class="emoji">🎧</span>
+    <img class="hero-logo" src="/logo.png" alt="Music Bot">
+    <div class="pill"><span class="dot"></span> بوت موسيقى لديسكورد</div>
     <h1>شغّل <span class="grad">يوتيوب</span><br>في الروم الصوتي</h1>
-    <p>ابحث أو الصق رابط، والبوت ينضم للروم ويشغّل لك — طابور كامل، تحكّم بالصوت، تكرار وخلط. أضفه بنقرة واحدة.</p>
+    <p>ابحث أو الصق رابط — والبوت ينضم ويشغّل لك. طابور كامل، تحكّم بالصوت، تكرار وخلط.</p>
+    <p class="en">Search or paste a link — full queue, volume control, loop & shuffle. One-click add.</p>
 
     <div class="btnrow">
-      <a class="cta" id="addBtn" href="#" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.4A19 19 0 0 0 15.6 3l-.3.5a14 14 0 0 1 3.9 1.9 13 13 0 0 0-11.2 0A14 14 0 0 1 12 3.5L11.6 3A19 19 0 0 0 7 4.4 19.8 19.8 0 0 0 3.5 17a19 19 0 0 0 5.8 2.9l.6-1.3a12 12 0 0 1-2-1l.5-.4a13.4 13.4 0 0 0 11.4 0l.5.4c-.6.4-1.3.7-2 1l.6 1.3A19 19 0 0 0 24.5 17 19.8 19.8 0 0 0 20.3 4.4ZM9.7 14.3c-.9 0-1.7-.9-1.7-2s.8-2 1.7-2 1.7.9 1.7 2-.7 2-1.7 2Zm5.6 0c-1 0-1.7-.9-1.7-2s.7-2 1.7-2 1.7.9 1.7 2-.8 2-1.7 2Z"/></svg>
-        أضف إلى ديسكورد · Add to Discord
+      <a class="btn btn-primary btn-pulse" id="addBtn" href="#" rel="noopener">
+        <!-- Discord glyph -->
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.075.075 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.029zM8.02 15.331c-1.182 0-2.157-1.086-2.157-2.42 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.419-2.157 2.419zm7.974 0c-1.18 0-2.157-1.086-2.157-2.42 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.419-2.157 2.419z"/></svg>
+        أضف إلى ديسكورد
       </a>
-      <a class="cta ghost" href="https://github.com/khaledq84ever/discord-music-bot" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.8 21.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.3-1.1.6-1.4-2.2-.3-4.5-1.1-4.5-5a4 4 0 0 1 1-2.7c-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7a4 4 0 0 1 1 2.7c0 3.9-2.3 4.7-4.5 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>
-        GitHub · المصدر
+      <a class="btn btn-ghost" href="https://github.com/khaledq84ever/discord-music-bot" target="_blank" rel="noopener">
+        <!-- GitHub octocat -->
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.87 10.91.58.1.78-.25.78-.55v-1.94c-3.2.7-3.87-1.37-3.87-1.37-.52-1.34-1.28-1.69-1.28-1.69-1.04-.71.08-.69.08-.69 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.36.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.16 1.18a10.93 10.93 0 0 1 5.74 0c2.2-1.49 3.16-1.18 3.16-1.18.62 1.58.23 2.75.11 3.04.74.8 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.15v3.18c0 .31.21.66.79.55C20.22 21.38 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+        GitHub
       </a>
     </div>
-    <span class="sub">🔊 يحتاج صلاحية الانضمام للروم الصوتي · Needs Connect + Speak</span>
+    <span class="sub">يحتاج صلاحية Connect + Speak في الروم الصوتي</span>
   </section>
 
+  <!-- ─── COMMANDS ─── -->
+  <div class="head">
+    <h2>الأوامر</h2>
+    <p>Slash commands — تشتغل من أول تثبيت</p>
+  </div>
   <section class="cmds">
-    <div class="cmd"><div class="ic">▶️</div><div><code>/play</code><span>رابط أو بحث · URL or search</span></div></div>
-    <div class="cmd"><div class="ic">⏭️</div><div><code>/skip</code><span>تخطَّ المقطع · skip track</span></div></div>
-    <div class="cmd"><div class="ic">📜</div><div><code>/queue</code><span>اعرض الطابور · view queue</span></div></div>
-    <div class="cmd"><div class="ic">🔊</div><div><code>/volume</code><span>0–200% · loudness</span></div></div>
-    <div class="cmd"><div class="ic">🔂</div><div><code>/loop</code><span>كرّر الحالي · repeat</span></div></div>
-    <div class="cmd"><div class="ic">🔀</div><div><code>/shuffle</code><span>اخلط الطابور · shuffle</span></div></div>
-    <div class="cmd"><div class="ic">⏸️</div><div><code>/pause</code><span>إيقاف مؤقت · pause</span></div></div>
-    <div class="cmd"><div class="ic">⏹️</div><div><code>/stop</code><span>وقف واخرج · stop & leave</span></div></div>
+    <div class="cmd"><div class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5.5v13l11-6.5z"/></svg></div><div><code>/play</code><span>رابط أو بحث · URL or search</span></div></div>
+    <div class="cmd"><div class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5v14l9-7zM16 5h3v14h-3z"/></svg></div><div><code>/skip</code><span>تخطَّ المقطع · skip</span></div></div>
+    <div class="cmd"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div><div><code>/queue</code><span>اعرض الطابور · view queue</span></div></div>
+    <div class="cmd"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4zM19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div><div><code>/volume</code><span>0–200% · loudness</span></div></div>
+    <div class="cmd"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg></div><div><code>/loop</code><span>كرّر الحالي · repeat</span></div></div>
+    <div class="cmd"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></div><div><code>/shuffle</code><span>اخلط الطابور · shuffle</span></div></div>
+    <div class="cmd"><div class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></div><div><code>/pause</code><span>إيقاف مؤقت · pause</span></div></div>
+    <div class="cmd"><div class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></div><div><code>/stop</code><span>وقف واخرج · stop & leave</span></div></div>
   </section>
 
+  <!-- ─── STEPS ─── -->
+  <div class="head"><h2>كيف تشغّل؟</h2><p>How to play — ثلاث خطوات</p></div>
   <section class="steps">
-    <h2>كيف تشغّل؟ · How to play</h2>
     <div class="step"><div class="n">1</div><div class="t"><b>اضغط «أضف إلى ديسكورد»</b><span>اختر سيرفرك ووافق على الصلاحيات.</span></div></div>
     <div class="step"><div class="n">2</div><div class="t"><b>ادخل روم صوتي</b><span>لازم تكون داخل روم صوتي عشان البوت ينضم لك.</span></div></div>
-    <div class="step"><div class="n">3</div><div class="t"><b>اكتب <code>/play</code> واسم الأغنية أو الرابط</b><span>يبدأ التشغيل، وزِد كم ما تبي للطابور.</span></div></div>
+    <div class="step"><div class="n">3</div><div class="t"><b>اكتب <code>/play</code> + اسم الأغنية أو الرابط</b><span>يبدأ التشغيل، وزِد كم ما تبي للطابور.</span></div></div>
   </section>
 
+  <!-- ─── CTA ─── -->
+  <section class="cta-box">
+    <h2>شغّل أول أغنية الحين</h2>
+    <p>مجاني · مفتوح المصدر · يشتغل على Railway</p>
+    <div class="btnrow">
+      <a class="btn btn-primary" id="addBtn2" href="#" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.075.075 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.029zM8.02 15.331c-1.182 0-2.157-1.086-2.157-2.42 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.419-2.157 2.419zm7.974 0c-1.18 0-2.157-1.086-2.157-2.42 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.419-2.157 2.419z"/></svg>
+        أضف إلى ديسكورد
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
   <footer>
-    صُنع بـ ❤️ للمستخدم العربي · Built for Arabic users<br>
-    <a href="https://github.com/khaledq84ever/discord-music-bot" target="_blank" rel="noopener">GitHub</a><br>
+    <div class="footer-family">
+      <a href="https://github.com/khaledq84ever/discord-ai-bot" title="AI Chat Bot"><img src="/logo-ai.png" alt="AI Bot" style="opacity:.55"></a>
+      <a href="https://github.com/khaledq84ever/discord-music-bot" title="Music Bot"><img src="/logo-music.png" alt="Music Bot"></a>
+      <a href="https://github.com/khaledq84ever/discord-backup-bot" title="BackUp Bot"><img src="/logo-backup.png" alt="BackUp Bot" style="opacity:.55"></a>
+    </div>
+    <div>Music Bot — شغّل يوتيوب في الروم الصوتي · <a href="https://github.com/khaledq84ever/discord-music-bot">GitHub</a></div>
+    <br>
     <a class="credit" href="https://x.com/KhaledQ84Ever" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M18.9 1.2h3.7l-8 9.1L24 22.8h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.2h7.6l5.2 6.9 6.1-6.9Zm-1.3 19.4h2L6.5 3.3H4.3l13.3 17.3Z"/></svg>
-      Programmed By: <b>@KhaledQ84Ever</b>
+      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      Programmed By <b>@KhaledQ84Ever</b>
     </a>
   </footer>
 </div>
@@ -162,20 +234,15 @@
   // ضع Application ID مال بوت الموسيقى هنا (ليس سراً) — Developer Portal → General.
   const CLIENT_ID = "";  // TODO: paste the music bot's Application ID
   const PERMISSIONS = "3228720";  // View+Send+Embed+History+Connect+Speak
-
-  const btn = document.getElementById("addBtn");
   function inviteUrl(){
     return `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}`
       + `&permissions=${PERMISSIONS}&scope=bot%20applications.commands`;
   }
-  btn.href = CLIENT_ID ? inviteUrl() : "#";
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (!CLIENT_ID) {
-      alert("⚠️ افتح web/index.html وحط Application ID في CLIENT_ID.");
-    } else {
-      window.open(inviteUrl(), "_blank", "noopener");
-    }
+  document.querySelectorAll('#addBtn,#addBtn2').forEach(btn=>{
+    btn.href = CLIENT_ID ? inviteUrl() : "#";
+    btn.addEventListener("click",(e)=>{
+      if(!CLIENT_ID){ e.preventDefault(); alert("⚠️ افتح web/index.html وحط Application ID في CLIENT_ID."); }
+    });
   });
 </script>
 </body>
