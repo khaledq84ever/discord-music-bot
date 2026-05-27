@@ -1,9 +1,9 @@
-"""End-to-end test for the cookie-free YouTube resolver.
+"""End-to-end test for the media resolver.
 
 Exercises search() + resolve_stream() across every link shape the bot must
 handle.  Prints PASS/FAIL with the exact reason, never raises.
 
-Run:  .venv/bin/python test_links.py
+Run:  python3 test_links.py
 """
 import asyncio
 import sys
@@ -25,6 +25,7 @@ CASES = [
     ("URL with extra params",  "https://www.youtube.com/watch?v=jNQXAC9IVRw&list=PL0123&t=10s&si=ab", "track"),
     ("plain search words",     "first video on youtube",                        "track"),
     ("playlist URL",           "https://www.youtube.com/playlist?list=PLrAXtmErZgOeiKm4sgNOknGvNjby9efdf", "many"),
+    ("direct .mp3 URL",        "https://download.samplelib.com/mp3/sample-3s.mp3", "track"),
     ("private/removed video",  "https://www.youtube.com/watch?v=aaaaaaaaaaa",   "graceful"),
     ("invalid URL",            "https://example.com/foo",                       "none"),
 ]
@@ -118,7 +119,7 @@ async def run_case(label: str, query: str, expect: str) -> bool:
 
 async def main() -> int:
     print("=" * 60)
-    print("Cookie-free YouTube resolver — link test matrix")
+    print("Media resolver — link test matrix")
     print("=" * 60)
     results = []
     for label, query, expect in CASES:

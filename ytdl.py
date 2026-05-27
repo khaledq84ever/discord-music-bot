@@ -1,14 +1,12 @@
-"""Cookie-free YouTube audio resolver for the player.
+"""Media resolver for the player.
 
-YouTube blocks datacenter IPs ("Sign in to confirm you're not a bot"), so
-yt-dlp / Invidious / Piped all fail from Railway. Instead we use the
-v3.y2mate.nu → iotacloud.org pipeline, which runs the extraction from a
-non-blocked IP and hands back a signed direct **MP3** URL that FFmpeg streams
-straight into the voice channel — no account, no cookies, no download to disk.
+Accepts: YouTube URLs · YouTube playlists · search words · direct media URLs
+(.mp3 / .m4a / .wav / .ogg / .opus / .mp4). Returns a signed audio stream URL
+that FFmpeg pipes straight into the Discord voice channel.
 
-Public interface (unchanged, so player.py/bot.py don't care how it works):
-  - search(query, requester) -> list[Track]   (a URL, a playlist, or words)
-  - resolve_stream(url)       -> str | None    (fresh signed MP3 URL, at play time)
+Public interface:
+  - search(query, requester) -> list[Track]
+  - resolve_stream(url)       -> str | None
 """
 import asyncio
 import json
@@ -23,9 +21,15 @@ _UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
        "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
 
 _VID_RE = re.compile(r"(?:v=|youtu\.be/|/shorts/|/live/|/embed/)([A-Za-z0-9_-]{11})")
+_MEDIA_EXT_RE = re.compile(r"\.(mp3|m4a|wav|ogg|opus|aac|flac|mp4|webm|mkv|mov)(?:$|\?)", re.I)
 
 # How many videos to pull off a playlist URL.
 PLAYLIST_LIMIT = 50
+
+
+def _is_direct_media(url: str) -> bool:
+    """True for direct .mp3 / .mp4 / etc. URLs — we play these as-is."""
+    return bool(_MEDIA_EXT_RE.search(url))
 
 
 @dataclass
@@ -166,6 +170,11 @@ async def search(query: str, requester: str) -> list[Track]:
     is_url = query.startswith(("http://", "https://"))
 
     if is_url:
+        # Direct media URL (.mp3 / .m4a / .mp4 / …) — play it straight.
+        if _is_direct_media(query):
+            name = urllib.parse.unquote(query.rsplit("/", 1)[-1].split("?")[0])
+            return [Track(title=name or "Audio", url=query, duration=None,
+                          thumbnail=None, uploader=None, requester=requester)]
         # A playlist URL with no specific video -> expand the whole list.
         if "list=" in query and "v=" not in query and "youtu.be/" not in query:
             ids = await loop.run_in_executor(None, _scrape_playlist_ids, query)
@@ -184,7 +193,10 @@ async def search(query: str, requester: str) -> list[Track]:
 
 
 async def resolve_stream(url: str) -> Optional[str]:
-    """Fresh signed MP3 URL for FFmpeg, resolved at play time."""
+    """Return a playable URL for FFmpeg."""
+    # Direct media URL — FFmpeg can stream it as-is.
+    if _is_direct_media(url):
+        return url
     vid = _video_id(url)
     if not vid:
         return None

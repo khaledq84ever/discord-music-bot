@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="assets/promo/01-hero.png" alt="Music Bot — cookie-free YouTube for Discord" width="100%">
+<img src="assets/promo/01-hero.png" alt="Music Bot — simple media player for Discord voice" width="100%">
 
 # 🎵 Music Bot — for Discord
 
-**Cookie-free YouTube player. Datacenter-IP friendly. Arabic + English.**
+**A simple media player for Discord voice channels. Arabic + English.**
 
-شغّل أي أغنية من يوتيوب داخل الروم الصوتي — بدون حساب، بدون كوكيز، يشتغل على Railway
+شغّل أي أغنية من يوتيوب داخل الروم الصوتي — بدون أي إعدادات، يشتغل من أوّل مرة
 
 [![Add to Discord](https://img.shields.io/badge/Add%20to%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](#-add-to-your-server)
 [![GitHub](https://img.shields.io/badge/Source-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/khaledq84ever/discord-music-bot)
@@ -17,14 +17,12 @@
 
 ---
 
-## ✨ Why this bot exists
+## ✨ What it is
 
-Every popular YouTube music bot on Discord either died (Groovy, Rythm, Hydra), needs a logged-in YouTube account (`cookies.txt`), or breaks on datacenter IPs because YouTube returns *"Sign in to confirm you're not a bot."*
-
-**This one doesn't.** It resolves a fresh signed direct-MP3 URL through the `v3.y2mate.nu → iotacloud.org` pipeline and streams it straight into your voice channel via FFmpeg. No account. No cookies. No download to disk. Median resolve **~1.8 seconds** on a datacenter IP.
+A simple, no-fuss media player that lives in your Discord server. Type `/play` with anything — a YouTube link, a playlist, a few search words, or a direct `.mp3` URL — and the audio plays in your voice channel. That's it.
 
 <div align="center">
-<img src="assets/promo/07-no-cookies.png" alt="No login, no cookies — works on Railway / datacenter IPs" width="100%">
+<img src="assets/promo/07-what-it-plays.png" alt="What the bot plays" width="100%">
 </div>
 
 ---
@@ -37,7 +35,7 @@ Every popular YouTube music bot on Discord either died (Groovy, Rythm, Hydra), n
 
 | Command | What it does |
 |---|---|
-| `/play <url \| words>` | Play a YouTube URL or search by words — joins your voice channel |
+| `/play <url \| words>` | Play a YouTube URL, a direct media URL, or search by words |
 | `/skip` | Skip the current track |
 | `/pause` · `/resume` | Pause / resume playback |
 | `/queue` | Show the current queue (top 10 + count) |
@@ -53,7 +51,7 @@ Every popular YouTube music bot on Discord either died (Groovy, Rythm, Hydra), n
 
 ## 🎛️ One-tap controls
 
-Every now-playing message comes with **vector-icon buttons** — no emoji-glyph headaches, same UI on every client. Only listeners in the same voice channel can press them.
+Every now-playing message comes with **vector-icon buttons** — same UI on every client. Only listeners in the same voice channel can press them.
 
 <div align="center">
 <img src="assets/promo/03-buttons.png" alt="One-tap button controls" width="100%">
@@ -65,7 +63,7 @@ Every now-playing message comes with **vector-icon buttons** — no emoji-glyph 
 
 ## 📜 Per-server queue + playlists
 
-Paste a full YouTube playlist URL and the bot enqueues up to **50 tracks** at once, resolving each stream lazily right before it plays so signed URLs never expire on you.
+Paste a full YouTube playlist URL and the bot enqueues up to **50 tracks** at once, resolving each one lazily right before it plays.
 
 <div align="center">
 <img src="assets/promo/05-queue.png" alt="Per-server queue with playlist support" width="100%">
@@ -85,26 +83,34 @@ Every command description, every error message, every embed — both languages. 
 
 ## ⏱️ Fast — proven, not promised
 
-`test_loop10.py` runs 10 varied videos + a 50-track playlist end-to-end on a datacenter IP. Times are real HTTP timings, not vibes.
+`test_loop10.py` runs 10 varied YouTube videos + a 50-track playlist end-to-end with real HTTP timings.
 
 <div align="center">
 <img src="assets/promo/08-speed.png" alt="Resolve-time stats" width="100%">
 </div>
 
 ```text
-test_links.py     7 / 7  PASS
-test_loop10.py    9 / 10 PASS  +  50-track playlist in 8.5 s
+test_links.py     8 / 8  PASS    (YouTube, playlists, search, direct .mp3, removed videos)
+test_loop10.py    9 / 10 PASS    +  50-track playlist in ~9 s
                   ↳ the only failure is a 24/7 livestream
-                    (can't be MP3-converted by design)
+                    (live streams aren't supported by design)
 ```
 
 ---
 
-## 🔗 Supported link types
+## 🔗 What you can paste at `/play`
 
 <div align="center">
 <img src="assets/promo/09-links.png" alt="Supported link types" width="100%">
 </div>
+
+- `youtube.com/watch?v=…` — single track
+- `youtu.be/…` — short link
+- `…/watch?v=…&list=&t=&si=` — extra params are fine
+- `…/playlist?list=…` — playlist (up to 50 tracks)
+- `https://example.com/song.mp3` — direct audio file (.mp3, .m4a, .wav, .ogg, .opus, .flac)
+- `https://example.com/video.mp4` — direct video file (audio gets streamed)
+- `"never gonna give you up"` — plain search words (English or Arabic)
 
 ---
 
@@ -147,46 +153,22 @@ python3 bot.py
 
 ---
 
-## 🏗️ How it works (the cookie-free trick)
-
-```
-       you paste a YouTube link
-                 │
-                 ▼
-        ┌──────────────────┐
-        │  v3.y2mate.nu    │   priming GET → kicks off backend conversion
-        └────────┬─────────┘
-                 ▼
-        ┌──────────────────┐
-        │ iotacloud.org/   │   poll /api/?r=1..7&v=<id>
-        │ api/ (signed)    │   returns { progress:'completed', url:'<signed MP3>' }
-        └────────┬─────────┘
-                 ▼
-        ┌──────────────────┐
-        │      FFmpeg      │   streams the MP3 straight into Discord voice
-        └──────────────────┘
-```
-
-No `yt-dlp`. No browser. No login. No download to disk — FFmpeg streams the URL inline.
-
----
-
 ## 📂 Project layout
 
 ```
 discord-music-bot/
 ├── bot.py            # 12 slash commands
 ├── player.py         # GuildPlayer (queue + FFmpeg loop) + MusicControls (button view)
-├── ytdl.py           # cookie-free resolver (oEmbed + iotacloud + YT search scrape)
+├── ytdl.py           # media resolver (YouTube + playlists + direct URLs)
 ├── config.py         # env-driven config
-├── test_links.py     # 7-case link-type matrix
+├── test_links.py     # 8-case link-type matrix
 ├── test_loop10.py    # 10 varied videos + 50-track playlist stress
 ├── Dockerfile        # Python + FFmpeg + PyNaCl
 ├── railway.json      # Railway service config (worker, no public port)
-├── web/index.html    # Arabic-first landing page (deployable to Vercel/Railway)
+├── web/index.html    # Arabic-first landing page (Vercel/Railway deployable)
 └── assets/
     ├── fonts/        # Inter (Latin) + Tajawal (Arabic)
-    ├── make_promo.py # this README's 10 images, vector-drawn
+    ├── make_promo.py # 10 vector-drawn promo images
     └── promo/        # generated PNGs
 ```
 
@@ -197,26 +179,26 @@ discord-music-bot/
 Reproduce the published numbers yourself:
 
 ```bash
-python3 test_links.py     # 7 link shapes (URL / short / playlist / search / removed / invalid)
-python3 test_loop10.py    # 10 popular tracks + a real playlist, with per-case timings
+python3 test_links.py     # 8 link shapes (YouTube URL/short/playlist/search/direct .mp3/removed/invalid)
+python3 test_loop10.py    # 10 popular YouTube videos + a real playlist
 ```
 
-Both scripts print the actual resolved signed URL and HEAD the stream to prove it's `Content-Type: audio/mpeg`. No mocks.
+Both scripts print the actual resolved stream URL and HEAD-check it to prove it's real audio. No mocks.
 
 ---
 
 ## ⚠️ Known limits
 
-- **Live streams don't work.** The MP3 pipeline only produces finished files; 24/7 lo-fi streams and the like will fail gracefully (the player loop continues to the next track).
+- **Live streams don't work.** The YouTube pipeline only handles finished videos; 24/7 lo-fi streams will fail gracefully (the player loop continues to the next track).
 - **Playlist cap = 50** by default (configurable via `PLAYLIST_LIMIT` in `ytdl.py`).
-- **Search words** use the public YouTube results page — fast but YouTube may rate-limit if abused. URL pastes don't hit search and are always free.
+- **Search words** use the public YouTube results page — fast but YouTube may rate-limit if abused. URL pastes don't hit search.
 - **No persistence.** Queues live in memory; restarting the bot clears them. By design.
 
 ---
 
 ## 📜 License
 
-MIT — do whatever you want, just don't blame me if YouTube changes the rules.
+MIT — do whatever you want.
 
 ---
 

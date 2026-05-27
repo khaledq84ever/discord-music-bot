@@ -1,7 +1,7 @@
 """Generate 10 branded promo images for the Discord Music Bot.
 
-All icons are drawn as PIL vector shapes (no emoji glyphs) so they render
-crisp on every system. Arabic is shaped natively by libraqm.
+All icons are drawn as PIL vector shapes so they render crisp on every system.
+Arabic is shaped natively by libraqm.
 Output: assets/promo/*.png at 1280x640 (GitHub-card friendly).
 """
 import math
@@ -292,14 +292,14 @@ def hero():
     f_pill = inter(22, 700)
 
     T(d, (340, 200), "Music Bot", f_title, WHITE)
-    T(d, (340, 305), "cookie-free YouTube · for Discord", f_sub, MUTED)
+    T(d, (340, 305), "simple media player · for Discord voice", f_sub, MUTED)
     T(d, (340, 360), "بث يوتيوب مباشر داخل الروم الصوتي", f_taj, GOLD)
 
     chips = [
-        ("direct MP3 stream",  GREEN,  NAVY,  NAVY),
-        ("no login · no cookies", BLUE, WHITE, WHITE),
-        ("Arabic + English",   GOLD,   NAVY,  NAVY),
-        ("playlists · queue",  PURPLE, WHITE, WHITE),
+        ("YouTube · search · playlists", GREEN, NAVY,  NAVY),
+        ("direct MP3 / MP4 URLs",        BLUE,  WHITE, WHITE),
+        ("Arabic + English",             GOLD,  NAVY,  NAVY),
+        ("12 slash commands",            PURPLE, WHITE, WHITE),
     ]
     x = 340
     for label, bg, fg, dotc in chips:
@@ -536,35 +536,35 @@ def bilingual():
 
 
 # --------------------------------------------------------------------------- #
-#  7. NO COOKIES / NO LOGIN
+#  7. WHAT IT PLAYS
 # --------------------------------------------------------------------------- #
-def no_cookies():
+def what_it_plays():
     img = base(glow1=GREEN, glow2=BLUE)
     d = ImageDraw.Draw(img)
-    T(d, (W // 2, 70), "No login. No cookies.",
+    T(d, (W // 2, 70), "What it plays",
       inter(66, 900), WHITE, anchor="mm")
     T(d, (W // 2, 140),
-      "works on Railway / datacenter IPs out of the box",
+      "anything you paste — link, search, playlist, or media URL",
       inter(24, 500), MUTED, anchor="mm")
 
     cw, ch_, cy = 360, 380, 230
     x = 60
     cards = [
-        ("yt-dlp + cookies",
-         ["needs a signed-in YouTube account",
-          "export cookies.txt manually",
-          "rotates / expires",
-          "fails silently on Railway"], RED, icon_cross),
-        ("yt-dlp + bot-client",
-         ["bot-detection blocks all clients",
-          "no token, no playback",
-          "still gates the API",
-          "breaks every few weeks"], GOLD, icon_warn),
-        ("this bot",
-         ["direct MP3 via iotacloud",
-          "no account, no token, no cookies",
-          "median resolve ~1.8 s",
-          "works on any datacenter IP"], GREEN, icon_check),
+        ("YouTube videos",
+         ["paste any watch?v= URL",
+          "youtu.be / shorts / embed",
+          "ignores extra params",
+          "Arabic + English search"], RED, icon_check),
+        ("Playlists",
+         ["paste a playlist URL",
+          "enqueues up to 50 tracks",
+          "loop · shuffle · skip",
+          "per-server queue"], GOLD, icon_check),
+        ("Direct media URLs",
+         ["any .mp3 / .m4a / .wav",
+          ".ogg / .opus / .flac",
+          ".mp4 / .webm video files",
+          "FFmpeg streams them as-is"], GREEN, icon_check),
     ]
     for title, lines, color, mark_icon in cards:
         card(d, [x, cy, x + cw, cy + ch_])
@@ -577,7 +577,7 @@ def no_cookies():
             T(d, (x + 52, ly), line, inter(18, 500), MUTED)
             ly += 42
         x += cw + 20
-    save(img, "07-no-cookies.png")
+    save(img, "07-what-it-plays.png")
 
 
 # --------------------------------------------------------------------------- #
@@ -700,7 +700,7 @@ if __name__ == "__main__":
     now_playing()
     queue_img()
     bilingual()
-    no_cookies()
+    what_it_plays()
     speed()
     links()
     cta()

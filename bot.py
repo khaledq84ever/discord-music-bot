@@ -1,5 +1,5 @@
-"""YouTube music bot for Discord — slash commands, per-guild queue, streams
-audio direct-MP3 (cookie-free via iotacloud) through FFmpeg. Arabic + English.
+"""Simple media-player bot for Discord — slash commands, per-guild queue.
+Plays YouTube links, search words, playlists, and direct media URLs.
 """
 import logging
 
