@@ -21,7 +21,7 @@ VIDEOS = [
     ("Bohemian Rhapsody",        "https://www.youtube.com/watch?v=fJ9rUzIMcZQ"),
     ("Arabic search — Fairouz",  "فيروز كفى يا قلب"),
     ("English search — Beatles", "the beatles here comes the sun"),
-    ("Lo-Fi long stream-ish",    "https://www.youtube.com/watch?v=5qap5aO4i9A"),
+    ("Sweet Child O' Mine (5m)",  "https://www.youtube.com/watch?v=1w7OgIMMRc4"),
     ("youtu.be short link",      "https://youtu.be/L_jWHffIx5E"),
 ]
 
