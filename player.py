@@ -227,7 +227,8 @@ class GuildPlayer:
                 await self.voice.disconnect(force=True)
             except Exception:
                 pass
-        if not self._task.done():
+        current = asyncio.current_task()
+        if current is not self._task and not self._task.done():
             self._task.cancel()
         self.manager.players.pop(self.guild.id, None)
         log.info("player for guild %s torn down (%s)", self.guild.id, reason)
