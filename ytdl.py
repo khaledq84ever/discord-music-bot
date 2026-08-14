@@ -27,6 +27,11 @@ _MEDIA_EXT_RE = re.compile(r"\.(mp3|m4a|wav|ogg|opus|aac|flac|mp4|webm|mkv|mov)(
 # How many videos to pull off a playlist URL.
 PLAYLIST_LIMIT = 50
 
+# The VPS's datacenter IP gets YouTube's "Sign in to confirm you're not a
+# bot" wall on plain requests. bgutil-ytdlp-pot-provider (already running
+# locally on :4416, see ~/bgutil-pot) supplies a proof-of-origin token that
+# makes some of those checks pass — it doesn't help when YouTube 429s the
+# request outright, only the softer bot-check case.
 _YDL_OPTS = {
     "quiet": True,
     "no_warnings": True,
@@ -36,6 +41,7 @@ _YDL_OPTS = {
     "socket_timeout": 15,
     "extractor_retries": 3,
     "geo_bypass": True,
+    "extractor_args": {"youtubepot-bgutilhttp": {"base_url": ["http://127.0.0.1:4416"]}},
 }
 
 

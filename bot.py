@@ -1,6 +1,7 @@
 """Simple media-player bot for Discord — slash commands, per-guild queue.
 Plays YouTube links, search words, playlists, and direct media URLs.
 """
+import asyncio
 import logging
 
 import discord
@@ -19,16 +20,38 @@ bot = discord.Client(intents=intents)
 tree = app_commands.CommandTree(bot)
 manager = MusicManager(bot)
 
+# on_ready fires on every gateway reconnect, not just the first login — guard
+# so command sync (a REST call subject to Discord's rate limits) runs once.
+_synced = False
+
 
 @bot.event
 async def on_ready():
-    if config.DEV_GUILD_ID:
-        g = discord.Object(id=int(config.DEV_GUILD_ID))
-        tree.copy_global_to(guild=g)
-        await tree.sync(guild=g)
-        log.info("Synced commands instantly to dev guild %s", config.DEV_GUILD_ID)
-    await tree.sync()
+    global _synced
+    if not _synced:
+        if config.DEV_GUILD_ID:
+            g = discord.Object(id=int(config.DEV_GUILD_ID))
+            tree.copy_global_to(guild=g)
+            await tree.sync(guild=g)
+            log.info("Synced commands instantly to dev guild %s", config.DEV_GUILD_ID)
+        await tree.sync()
+        _synced = True
     log.info("Logged in as %s — in %d server(s).", bot.user, len(bot.guilds))
+
+
+@tree.error
+async def on_tree_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
+    """Safety net: without this, an unhandled error (e.g. a voice-connect
+    timeout) leaves the interaction hanging with no response at all."""
+    log.exception("command error", exc_info=error)
+    msg = "⚠️ صار خطأ غير متوقع / an unexpected error occurred."
+    try:
+        if interaction.response.is_done():
+            await interaction.followup.send(msg, ephemeral=True)
+        else:
+            await interaction.response.send_message(msg, ephemeral=True)
+    except discord.HTTPException:
+        pass
 
 
 @bot.event
@@ -55,7 +78,7 @@ async def _ensure_voice(interaction: discord.Interaction):
             await channel.connect()
         elif vc.channel.id != channel.id:
             await vc.move_to(channel)
-    except discord.ClientException as e:
+    except (discord.ClientException, asyncio.TimeoutError) as e:
         return None, f"تعذّر الاتصال / can't connect: {e}"
     return manager.get(interaction.guild, interaction.channel), None
 
