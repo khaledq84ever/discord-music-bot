@@ -207,7 +207,7 @@ MIT — do whatever you want.
 
 <div align="center">
 
-**Made for Arabic Discord servers · works for everyone else too.**
+**Made by KhaledQ8 · for Arabic Discord servers · works for everyone else too.**
 
 [GitHub](https://github.com/khaledq84ever/discord-music-bot) · [Sister bot — AI chat](https://github.com/khaledq84ever/discord-ai-bot) · [@KhaledQ84Ever](https://x.com/KhaledQ84Ever)
 
