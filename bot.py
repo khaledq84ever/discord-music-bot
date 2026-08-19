@@ -248,7 +248,7 @@ async def help_cmd(interaction: discord.Interaction):
         ),
         color=0xE8001C,
     )
-    embed.set_footer(text="Made by KhaledQ8")
+    embed.set_footer(text="Program By KhaledQ8")
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
