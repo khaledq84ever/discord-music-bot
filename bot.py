@@ -86,8 +86,8 @@ async def _ensure_voice(interaction: discord.Interaction):
 # --------------------------------------------------------------------------- #
 #  Slash commands
 # --------------------------------------------------------------------------- #
-@tree.command(name="play", description="شغّل من يوتيوب (رابط أو بحث) / Play from YouTube (URL or search)")
-@app_commands.describe(query="رابط يوتيوب أو كلمات بحث / a YouTube URL or search words")
+@tree.command(name="play", description="شغّل من يوتيوب أو سبوتيفاي (رابط أو بحث) / Play from YouTube or Spotify (URL or search)")
+@app_commands.describe(query="رابط يوتيوب/سبوتيفاي أو كلمات بحث / a YouTube/Spotify URL or search words")
 async def play(interaction: discord.Interaction, query: str):
     await interaction.response.defer()
     player, err = await _ensure_voice(interaction)
@@ -108,7 +108,7 @@ async def play(interaction: discord.Interaction, query: str):
         pos = len(player.tracks)
         embed = discord.Embed(
             title="➕ أُضيف للطابور / Added to queue",
-            description=f"**[{t.title}]({t.url})** · `{t.duration_str}`",
+            description=f"**[{t.title}]({t.display_url})** · `{t.duration_str}`",
             color=0xD4A843,
         )
         if pos > 0 and player.current:
@@ -167,10 +167,10 @@ async def queue_cmd(interaction: discord.Interaction):
         return await interaction.response.send_message("📭 الطابور فاضي / queue is empty.", ephemeral=True)
     lines = []
     if player.current:
-        lines.append(f"🎶 **يشتغل الآن / now:** [{player.current.title}]({player.current.url})")
+        lines.append(f"🎶 **يشتغل الآن / now:** [{player.current.title}]({player.current.display_url})")
     upcoming = list(player.tracks)[:10]
     for i, t in enumerate(upcoming, 1):
-        lines.append(f"`{i}.` [{t.title}]({t.url}) · `{t.duration_str}`")
+        lines.append(f"`{i}.` [{t.title}]({t.display_url}) · `{t.duration_str}`")
     extra = len(player.tracks) - len(upcoming)
     if extra > 0:
         lines.append(f"… و **{extra}** غيرها / and {extra} more")
@@ -234,7 +234,8 @@ async def help_cmd(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🎵 Music Bot — الأوامر / Commands",
         description=(
-            "**/play** `<رابط أو بحث>` — شغّل أو أضف للطابور / play or queue\n"
+            "**/play** `<رابط يوتيوب/سبوتيفاي أو بحث>` — شغّل أو أضف للطابور، يدعم قوائم تشغيل سبوتيفاي / "
+            "play or queue — supports Spotify playlists\n"
             "**/skip** — تخطَّ / skip\n"
             "**/pause** · **/resume** — إيقاف/استئناف / pause·resume\n"
             "**/queue** — الطابور / the queue\n"

@@ -88,9 +88,9 @@ class MusicControls(discord.ui.View):
             return await interaction.response.send_message("📭 الطابور فاضي / queue is empty.", ephemeral=True)
         lines = []
         if self.player.current:
-            lines.append(f"🎶 **الآن / now:** [{self.player.current.title}]({self.player.current.url})")
+            lines.append(f"🎶 **الآن / now:** [{self.player.current.title}]({self.player.current.display_url})")
         for i, t in enumerate(list(self.player.tracks)[:10], 1):
-            lines.append(f"`{i}.` [{t.title}]({t.url})")
+            lines.append(f"`{i}.` [{t.title}]({t.display_url})")
         extra = max(0, len(self.player.tracks) - 10)
         if extra:
             lines.append(f"… و **{extra}** غيرها / and {extra} more")
@@ -197,7 +197,7 @@ class GuildPlayer:
     def _now_playing_embed(self, t: ytdl.Track) -> discord.Embed:
         e = discord.Embed(
             title="🎶 يشتغل الآن / Now Playing",
-            description=f"**[{t.title}]({t.url})**",
+            description=f"**[{t.title}]({t.display_url})**",
             color=0xE8001C,
         )
         if t.uploader:

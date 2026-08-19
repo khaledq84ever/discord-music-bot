@@ -35,7 +35,7 @@ A simple, no-fuss media player that lives in your Discord server. Type `/play` w
 
 | Command | What it does |
 |---|---|
-| `/play <url \| words>` | Play a YouTube URL, a direct media URL, or search by words |
+| `/play <url \| words>` | Play a YouTube or Spotify link, a direct media URL, or search by words |
 | `/skip` | Skip the current track |
 | `/pause` · `/resume` | Pause / resume playback |
 | `/queue` | Show the current queue (top 10 + count) |
@@ -63,7 +63,7 @@ Every now-playing message comes with **vector-icon buttons** — same UI on ever
 
 ## 📜 Per-server queue + playlists
 
-Paste a full YouTube playlist URL and the bot enqueues up to **50 tracks** at once, resolving each one lazily right before it plays.
+Paste a full YouTube or Spotify playlist/album URL and the bot enqueues up to **50 tracks** at once, resolving each one lazily right before it plays. Spotify links resolve via Spotify's own public embed page (no API key), then each track title is matched to its audio on YouTube — same lazy resolution as any playlist.
 
 <div align="center">
 <img src="assets/promo/05-queue.png" alt="Per-server queue with playlist support" width="100%">
@@ -107,7 +107,9 @@ test_loop10.py    9 / 10 PASS    +  50-track playlist in ~9 s
 - `youtube.com/watch?v=…` — single track
 - `youtu.be/…` — short link
 - `…/watch?v=…&list=&t=&si=` — extra params are fine
-- `…/playlist?list=…` — playlist (up to 50 tracks)
+- `…/playlist?list=…` — YouTube playlist (up to 50 tracks)
+- `open.spotify.com/track/…` — single Spotify track
+- `open.spotify.com/playlist/…` · `…/album/…` — Spotify playlist/album (up to 50 tracks)
 - `https://example.com/song.mp3` — direct audio file (.mp3, .m4a, .wav, .ogg, .opus, .flac)
 - `https://example.com/video.mp4` — direct video file (audio gets streamed)
 - `"never gonna give you up"` — plain search words (English or Arabic)
@@ -159,7 +161,7 @@ python3 bot.py
 discord-music-bot/
 ├── bot.py            # 12 slash commands
 ├── player.py         # GuildPlayer (queue + FFmpeg loop) + MusicControls (button view)
-├── ytdl.py           # media resolver (YouTube + playlists + direct URLs)
+├── ytdl.py           # media resolver (YouTube + playlists + direct URLs + Spotify)
 ├── config.py         # env-driven config
 ├── test_links.py     # 8-case link-type matrix
 ├── test_loop10.py    # 10 varied videos + 50-track playlist stress
@@ -191,6 +193,7 @@ Both scripts print the actual resolved stream URL and HEAD-check it to prove it'
 
 - **Live streams don't work.** The YouTube pipeline only handles finished videos; 24/7 lo-fi streams will fail gracefully (the player loop continues to the next track).
 - **Playlist cap = 50** by default (configurable via `PLAYLIST_LIMIT` in `ytdl.py`).
+- **Spotify has no audio API** (DRM) — the bot resolves the track title from Spotify's public embed page, then plays the closest YouTube match for that title/artist. It's a title match, not the literal Spotify master, and a handful of tracks per playlist may fail to match or hit YouTube's bot-check; the player skips those and keeps going.
 - **Search words** use the public YouTube results page — fast but YouTube may rate-limit if abused. URL pastes don't hit search.
 - **No persistence.** Queues live in memory; restarting the bot clears them. By design.
 
