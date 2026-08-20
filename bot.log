@@ -39,3 +39,5 @@ ERROR: [youtube] 2nimPTgkI0A: Sign in to confirm you’re not a bot. Use --cooki
 [2026-08-19 23:26:06] [INFO    ] discord.voice_state: The voice handshake is being terminated for Channel ID 979799556969623642 (Guild ID 979798847171739678)
 INFO:discord.voice_state:The voice handshake is being terminated for Channel ID 979799556969623642 (Guild ID 979798847171739678)
 INFO:music.player:player for guild 979798847171739678 torn down (idle)
+[2026-08-19 23:57:53] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session 52720743481eec431a7b56fc8f3ba21c.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session 52720743481eec431a7b56fc8f3ba21c.
