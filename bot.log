@@ -186,3 +186,134 @@ INFO:discord.gateway:Shard ID None has successfully RESUMED session 7d07a5931acf
 INFO:discord.gateway:Shard ID None has successfully RESUMED session 7d07a5931acfd6624bbc1032475199ed.
 [2026-08-23 17:16:03] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session 7d07a5931acfd6624bbc1032475199ed.
 INFO:discord.gateway:Shard ID None has successfully RESUMED session 7d07a5931acfd6624bbc1032475199ed.
+[2026-08-23 18:14:45] [WARNING ] discord.gateway: Shard ID None heartbeat blocked for more than 10 seconds.
+Loop thread traceback (most recent call last):
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/aiohttp/client_ws.py", line 409, in receive
+    msg = await self._reader.read()
+  File "/usr/lib/python3.12/asyncio/timeouts.py", line 95, in __aenter__
+    return self
+  File "/usr/lib/python3.12/asyncio/timeouts.py", line 71, in reschedule
+    self._timeout_handler = loop.call_at(when, self._on_timeout)
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 783, in call_at
+    return timer
+
+WARNING:discord.gateway:Shard ID None heartbeat blocked for more than 10 seconds.
+Loop thread traceback (most recent call last):
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/aiohttp/client_ws.py", line 409, in receive
+    msg = await self._reader.read()
+  File "/usr/lib/python3.12/asyncio/timeouts.py", line 95, in __aenter__
+    return self
+  File "/usr/lib/python3.12/asyncio/timeouts.py", line 71, in reschedule
+    self._timeout_handler = loop.call_at(when, self._on_timeout)
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 783, in call_at
+    return timer
+
+[2026-08-23 18:15:29] [ERROR   ] discord.client: Attempting a reconnect in 1.76s
+Traceback (most recent call last):
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 731, in connect
+    await self.ws.poll_event()
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 644, in poll_event
+    await self.received_message(msg.data)
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 549, in received_message
+    await self.send_as_json(beat)
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 681, in send_as_json
+    await self.send(utils._to_json(data))
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 677, in send
+    await self.socket.send_str(data)
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/aiohttp/client_ws.py", line 289, in send_str
+    await self._writer.send_frame(
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/aiohttp/_websocket/writer.py", line 82, in send_frame
+    self._write_websocket_frame(message, opcode, 0)
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/aiohttp/_websocket/writer.py", line 150, in _write_websocket_frame
+    raise ClientConnectionResetError("Cannot write to closing transport")
+aiohttp.client_exceptions.ClientConnectionResetError: Cannot write to closing transport
+ERROR:discord.client:Attempting a reconnect in 1.76s
+Traceback (most recent call last):
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 731, in connect
+    await self.ws.poll_event()
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 644, in poll_event
+    await self.received_message(msg.data)
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 549, in received_message
+    await self.send_as_json(beat)
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 681, in send_as_json
+    await self.send(utils._to_json(data))
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 677, in send
+    await self.socket.send_str(data)
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/aiohttp/client_ws.py", line 289, in send_str
+    await self._writer.send_frame(
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/aiohttp/_websocket/writer.py", line 82, in send_frame
+    self._write_websocket_frame(message, opcode, 0)
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/aiohttp/_websocket/writer.py", line 150, in _write_websocket_frame
+    raise ClientConnectionResetError("Cannot write to closing transport")
+aiohttp.client_exceptions.ClientConnectionResetError: Cannot write to closing transport
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 183, in run
+    f.result(10)
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 458, in result
+    raise TimeoutError()
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/logging/__init__.py", line 1160, in emit
+    msg = self.format(record)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/logging/__init__.py", line 999, in format
+    return fmt.format(record)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/logging/__init__.py", line 703, in format
+    record.message = record.getMessage()
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/logging/__init__.py", line 392, in getMessage
+    msg = msg % self.args
+          ~~~~^~~~~~~~~~~
+TypeError: not enough arguments for format string
+Call stack:
+  File "/usr/lib/python3.12/threading.py", line 1030, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 194, in run
+    _log.warning(msg, self.shard_id, total)
+Message: 'Shard ID %s heartbeat blocked for more than %s seconds.\nLoop thread traceback (most recent call last):\n  File "/home/khaled/discord-music-bot/bot.py", line 258, in <module>\n    bot.run(config.DISCORD_TOKEN)\n  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 933, in run\n    asyncio.run(runner())\n  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run\n    return runner.run(main)\n  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run\n    return self._loop.run_until_complete(task)\n  File "/usr/lib/python3.12/asyncio/base_events.py", line 674, in run_until_complete\n    self.run_forever()\n  File "/usr/lib/python3.12/asyncio/base_events.py", line 641, in run_forever\n    self._run_once()\n  File "/usr/lib/python3.12/asyncio/base_events.py", line 1987, in _run_once\n    handle._run()\n  File "/usr/lib/python3.12/asyncio/events.py", line 88, in _run\n    self._context.run(self._callback, *self._args)\n  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 922, in runner\n    await self.start(token, reconnect=reconnect)\n  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 851, in start\n    await self.connect(reconnect=reconnect)\n  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 781, in connect\n    _log.exception(\'Attempting a reconnect in %.2fs\', retry)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1574, in exception\n    self.error(msg, *args, exc_info=exc_info, **kwargs)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1568, in error\n    self._log(ERROR, msg, args, **kwargs)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1684, in _log\n    self.handle(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1700, in handle\n    self.callHandlers(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1762, in callHandlers\n    hdlr.handle(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1028, in handle\n    self.emit(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1160, in emit\n    msg = self.format(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 999, in format\n    return fmt.format(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 711, in format\n    record.exc_text = self.formatException(record.exc_info)\n  File "/usr/lib/python3.12/logging/__init__.py", line 675, in formatMessage\n    return self._style.format(record)\n'
+Arguments: (None, 20)
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 183, in run
+    f.result(10)
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 458, in result
+    raise TimeoutError()
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/logging/__init__.py", line 1160, in emit
+    msg = self.format(record)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/logging/__init__.py", line 999, in format
+    return fmt.format(record)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/logging/__init__.py", line 703, in format
+    record.message = record.getMessage()
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/logging/__init__.py", line 392, in getMessage
+    msg = msg % self.args
+          ~~~~^~~~~~~~~~~
+TypeError: not enough arguments for format string
+Call stack:
+  File "/usr/lib/python3.12/threading.py", line 1030, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/gateway.py", line 194, in run
+    _log.warning(msg, self.shard_id, total)
+Message: 'Shard ID %s heartbeat blocked for more than %s seconds.\nLoop thread traceback (most recent call last):\n  File "/home/khaled/discord-music-bot/bot.py", line 258, in <module>\n    bot.run(config.DISCORD_TOKEN)\n  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 933, in run\n    asyncio.run(runner())\n  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run\n    return runner.run(main)\n  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run\n    return self._loop.run_until_complete(task)\n  File "/usr/lib/python3.12/asyncio/base_events.py", line 674, in run_until_complete\n    self.run_forever()\n  File "/usr/lib/python3.12/asyncio/base_events.py", line 641, in run_forever\n    self._run_once()\n  File "/usr/lib/python3.12/asyncio/base_events.py", line 1987, in _run_once\n    handle._run()\n  File "/usr/lib/python3.12/asyncio/events.py", line 88, in _run\n    self._context.run(self._callback, *self._args)\n  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 922, in runner\n    await self.start(token, reconnect=reconnect)\n  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 851, in start\n    await self.connect(reconnect=reconnect)\n  File "/home/khaled/discord-music-bot/.venv/lib/python3.12/site-packages/discord/client.py", line 781, in connect\n    _log.exception(\'Attempting a reconnect in %.2fs\', retry)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1574, in exception\n    self.error(msg, *args, exc_info=exc_info, **kwargs)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1568, in error\n    self._log(ERROR, msg, args, **kwargs)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1684, in _log\n    self.handle(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1700, in handle\n    self.callHandlers(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1762, in callHandlers\n    hdlr.handle(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1028, in handle\n    self.emit(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 1160, in emit\n    msg = self.format(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 999, in format\n    return fmt.format(record)\n  File "/usr/lib/python3.12/logging/__init__.py", line 711, in format\n    record.exc_text = self.formatException(record.exc_info)\n  File "/usr/lib/python3.12/logging/__init__.py", line 675, in formatMessage\n    return self._style.format(record)\n'
+Arguments: (None, 20)
+[2026-08-23 18:18:18] [INFO    ] discord.gateway: Shard ID None session has been invalidated.
+INFO:discord.gateway:Shard ID None session has been invalidated.
+[2026-08-23 18:18:24] [INFO    ] discord.gateway: Shard ID None has connected to Gateway (Session ID: 75bc2f24e3c54c577b31010dbbb08659).
+INFO:discord.gateway:Shard ID None has connected to Gateway (Session ID: 75bc2f24e3c54c577b31010dbbb08659).
+INFO:music:Logged in as Music Application#1093 — in 25 server(s).
