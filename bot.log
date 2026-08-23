@@ -317,3 +317,5 @@ INFO:discord.gateway:Shard ID None session has been invalidated.
 [2026-08-23 18:18:24] [INFO    ] discord.gateway: Shard ID None has connected to Gateway (Session ID: 75bc2f24e3c54c577b31010dbbb08659).
 INFO:discord.gateway:Shard ID None has connected to Gateway (Session ID: 75bc2f24e3c54c577b31010dbbb08659).
 INFO:music:Logged in as Music Application#1093 — in 25 server(s).
+[2026-08-23 21:47:07] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session 75bc2f24e3c54c577b31010dbbb08659.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session 75bc2f24e3c54c577b31010dbbb08659.
